@@ -1,5 +1,5 @@
 #include<iostream>
-
+// teste
 int main(){
 	int k = 2;
 	int res = 1;
