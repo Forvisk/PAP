@@ -13,8 +13,8 @@ void getParada(struct Parada *stPar);
 
 void relatorio(struct Parada stPar[]);
 
-template <typename Type>
-void swap( Type *a, Type *b);
+//template <typename Type>
+//void swap( Type *a, Type *b);
 
 // sobrecarga de função
 bool operator <( struct Parada& p1, struct Parada& p2){
