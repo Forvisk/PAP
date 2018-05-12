@@ -1,0 +1,36 @@
+#:kivy 1.10.0
+
+<Tela1>:
+	BoxLayout:
+		size: 50, 50
+		Button:
+			text: 'Selecao de Voo'
+			on_press:
+				root.manager.transition.direction = 'left'
+				root.manager.current = 'selecaoVoo'
+
+<Tela2>:
+	BoxLayout:
+		size: 50, 50
+		Button:
+			size: 50, 50
+			text: 'voo1'
+			on_press:
+				root.manager.transition.direction = 'left'
+				root.manager.current: 'mostraVoo'
+		Button:
+			size: 50, 50
+			text: 'voo2'
+			on_press:
+				root.manager.transition.direction = 'left'
+				root.manager.current: 'mostraVoo'
+
+<Tela3>:
+	BoxLayout:
+		size: 50, 50
+		Button:
+			size: 50, 50
+			text: 'test'
+			on_press:
+				root.manager.transition.direction = 'left'
+				root.manager.current = 'menu'
