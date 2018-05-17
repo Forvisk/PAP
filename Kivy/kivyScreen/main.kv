@@ -1,0 +1,40 @@
+#:kivy 1.10.0
+#: import SwapTransition kivy.uix.screenmanager.SwapTransition
+
+ScreenManagement:
+	transition: SwapTransition()
+	TelaInicial:
+	Tela1:
+	Tela2
+
+<TelaInicial>
+	name: 'inicio'
+
+	Button:
+		on_release: app.root.current = "selecVoo"
+		text: "Voos"
+		font_size: 50
+		size_hint: (0.9, 0.9)
+
+<Tela1>:
+	name: 'mapa'
+	Mapa
+
+	Button:
+		on_release: app.root.current = "selecVoo"
+		text: "Selacao do Voo"
+		font_size: 50
+		size_hint: (0.8, 0.8)
+
+	Label:
+		text: 'kkkkk'
+
+<Tela2>:
+	name: 'selecVoo'
+
+	Button:
+		on_release: app.root.current = "mapa"
+		text: "Mapa"
+		font_size: 25
+		size_hint: ( 1, 0.2)
+		pos_hint: {'right': 0.5, 'top' : 0.5}
