@@ -17,16 +17,8 @@ def getListaVoo( n):
 		listaVoo.append( ['Voo '+str( i * ( 3**3) + 10), (i+10)**2])
 	return listaVoo
 
-class ScrollListaVoo( ScrollView):
-	lista = getListaVoo( 15)
 
-	layout = GridLayout(cols=1, padding=10, spacing=10, size_hint=(None, None), width=500)
-
-	layout.bind(minimum_height=layout.setter('height'))
-
-	for i in range( len(lista)):
-		btn = Button(text=lista[i][0], size=(480, 40), size_hint=(None, None))
-		layout.add_widget(btn)
+# ver esse link	https://stackoverflow.com/questions/46749491/kivy-python-scroll-view-in-a-layout
 
 class Tela1( Screen):
 	#scrollL = ObjectProperty( None)
@@ -38,7 +30,7 @@ class Tela1( Screen):
 		butExit = Button( text='Sair', font_size=14)
 		boxlay.add_widget( butExit)
 
-		lista = GridLayout(cols=1, padding=10, spacing=10, size_hint=(None, None), width=500)
+		lista = GridLayout(cols=1, padding=10, spacing=10, size_hint_y = None, width=500)
 
 		lista.bind(minimum_height=lista.setter('height'))
 
