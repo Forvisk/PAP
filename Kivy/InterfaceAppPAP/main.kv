@@ -1,0 +1,24 @@
+#:kivy 1.10.0
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+Manager:
+	transition: FadeTransition
+	TelaInicial:
+	Tela1:
+
+<TelaInicial>:
+	name: 'telainic'
+
+	Button:
+		on_release: app.root.current = "selecVoo"
+		text: "Voos"
+		font_size: 50
+		size_hint: (0.9, 0.9)
+
+	Button:
+		on_release: App.on_stop
+		text: 'Sair'
+		background_color: 1,0,0,0.5
+	
+<Tela1>:
+	name: 'selecVoo'
