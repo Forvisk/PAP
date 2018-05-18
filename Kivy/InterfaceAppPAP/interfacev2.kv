@@ -1,1 +1,83 @@
-#: kivy 1.10.0
+#:kivy 1.10.0
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+Manager:
+	transition: FadeTransition()
+#	TelaInicial:
+	#TelaSelectVoo:
+
+<TelaSelectVoo>:
+	name: 'selecVoo'
+
+	BoxLayout:
+		orientation: 'vertical'
+		BoxLayout:
+			orientation: 'horizontal'
+			size_hint_y: .1
+			Button:
+				text: 'Voltar'
+				size_hint_x: .3
+				on_release: app.root.voltarTelaInic()
+
+			Label:
+				size_hint_x: .3
+
+			Button:
+				text: 'Recarregar'
+				size_hint_x: .3
+				on_release: app.root.recarregascrollview()
+
+		Label:
+			size_hint_y: .001
+
+		ScrollView:
+			id: scrollV
+			size_hint_y: .9
+
+<TelaInicial>:
+	name: 'telainic'
+
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			size_hint_y: .2
+
+		Button:
+			on_release: app.root.irTelaSelecVoo()
+			text: "Voos"
+			font_size: 15
+			size_hint_y: .2
+			size_hint_x: .5
+			pos_hint: {'center_x': .5, 'center_y': .2}
+
+		Label:
+			size_hint_y: .5
+
+		Button:
+			on_release: app.stop()
+			text: 'Sair'
+			font_size: 15
+			size_hint_y: .1
+			size_hint_x: .3
+			pos_hint: {'center_x': .5, 'center_y': .8}
+			background_color: (255, 1, 1, 1)
+
+<TelaParadasVoo>
+	BoxLayout:
+		orientation: 'vertical'
+
+		BoxLayout:
+			orientation: 'horizontal'
+
+			Label:
+				text: 'vooN'
+			Label:
+				text: 'Codigo'
+
+		BoxLayout:
+			orientation: 'horizontal'
+
+			Label:
+				text: 'Propriedades voo'
+
+		ScrollView:
+			id: scrollP
