@@ -65,20 +65,21 @@ Manager:
 <TelaParadasVoo>
 	BoxLayout:
 		orientation: 'vertical'
-
-		BoxLayout:
-			orientation: 'horizontal'
-
-			Label:
-				text: 'vooN'
-			Label:
-				text: 'Codigo'
-
-		BoxLayout:
-			orientation: 'horizontal'
-
-			Label:
-				text: 'Propriedades voo'
+		Button:
+			on_release: app.root.sairTelaParadaVoo()
+			text: 'Voltar'
+			font_size: 10
+			size_hint_y: .1
+			size_hint_x: .3
+		Label:
+			size_hint_y: .1
+			text: root.nomeVoo
 
 		ScrollView:
 			id: scrollP
+			size_hint_y: .7
+
+
+
+<BotaoListaVoo>:
+	on_release: app.root.irTelaParadaVoo( root.voo)
