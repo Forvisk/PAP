@@ -1,5 +1,6 @@
 #:kivy 1.10.0
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
 Manager:
 	transition: FadeTransition()
 	id: mang
@@ -7,7 +8,7 @@ Manager:
 	#TelaSelectVoo:
 
 <TelaSelectVoo>:
-	name: 'selecVoo'
+	name: 'selecvoo'
 
 	BoxLayout:
 		orientation: 'vertical'
@@ -17,6 +18,7 @@ Manager:
 			Button:
 				text: 'Voltar'
 				size_hint_x: .3
+				background_color: (0.5, 0.5, 1.3, 4)
 				on_release: app.root.voltarTelaInic()
 
 			Label:
@@ -25,6 +27,7 @@ Manager:
 			Button:
 				text: 'Recarregar'
 				size_hint_x: .3
+				background_color: (0, 0, 2, 4)
 				on_release: app.root.recarregaTelaSelecVoo()
 
 		Label:
@@ -48,6 +51,7 @@ Manager:
 			font_size: 15
 			size_hint_y: .2
 			size_hint_x: .5
+			background_color: (0.2, 0.2, 1.3, 4)
 			pos_hint: {'center_x': .5, 'center_y': .2}
 
 		Label:
@@ -60,17 +64,30 @@ Manager:
 			size_hint_y: .1
 			size_hint_x: .3
 			pos_hint: {'center_x': .5, 'center_y': .8}
-			background_color: (255, 1, 1, 1)
+			background_color: (100, 1, 1, 4)
 
 <TelaParadasVoo>
+	name: 'telaparada'
 	BoxLayout:
 		orientation: 'vertical'
-		Button:
-			on_release: app.root.sairTelaParadaVoo()
-			text: 'Voltar'
-			font_size: 10
+		BoxLayout:
+			orientation: 'horizontal'
 			size_hint_y: .1
-			size_hint_x: .3
+			Button:
+				on_release: app.root.sairTelaParadaVoo()
+				text: 'Voltar'
+				font_size: 10
+				size_hint_x: .3
+				background_color: (.5, .5, 1.3, 1)
+			Label:
+				size_hint_x: .4
+			Button:
+				on_release: app.root.irTelaMapa()
+				text: 'Ir Mapa'
+				font_size: 10
+				size_hint_x: .3
+				background_color: (0.3, 0.3, 2, 4)
+
 		Label:
 			size_hint_y: .1
 			text: root.nomeVoo
@@ -79,7 +96,38 @@ Manager:
 			id: scrollP
 			size_hint_y: .7
 
-
+<TelaCarregando>:
+	name: 'telaloading'
+	canvas.before:
+        BorderImage:
+            border: 10, 10, 10, 10
+            source: 'CarregandoPAPkivy.png'
+            pos: self.pos
+            size: self.size
 
 <BotaoListaVoo>:
 	on_release: app.root.irTelaParadaVoo( root.voo)
+
+
+<TelaMapa>:
+	name: 'telamap'
+
+	GridLayout:
+		rows: 2
+		BoxLayout:
+			Scatter:
+				id: scatterM
+				do_rotation: False
+
+				Image:
+					source: 'worldMap.jpg'
+					allow_stretch: True
+					keep_ratio: True
+					size: (1000, 610)
+
+		Button:
+			on_release: app.root.sairTelaMapa()
+			text: 'Voltar'
+			font_size: 10
+			size_hint_y: .1
+			background_color: (0.5, 0.5, 1.3, 2)

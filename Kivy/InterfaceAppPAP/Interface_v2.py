@@ -14,10 +14,13 @@ from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
+from kivy.uix.scatter import Scatter
 
 # selecionando um voo, pegar a lista de todas as paradas do voo
 # aqui se conecta com o servidor e pega os dados
 def getListaParadas( voo, n):
+	"""Busca do servidor a lista de paradas de um voo, retornando uma lista com os dados das paradas"""
 	listaParadas = []
 	peso = 50
 	for i in range(1,n):
@@ -27,14 +30,11 @@ def getListaParadas( voo, n):
 		if peso + rMovCarga < 0:
 			rMovCarga = 15
 		peso += rMovCarga
-		# parada = [ latitude, longitude, peso movido, peso final]
 		listaParadas.append( [rlat, rlong, rMovCarga, peso])
 
 	return listaParadas
 
-
 def listaParadastoStr( parada):
-	#print( parada)
 	
 	if( parada[0] < 0):
 		sLat = str( parada[0] * -1) + '° S'
@@ -55,17 +55,13 @@ def listaParadastoStr( parada):
 
 	return [ sCord, sCargaMov, sCargaFinal]
 	
-
 # aqui se conecta com o servidor e pega os dados
 def getListaVoo( n):
 	listaVoo = []
 	for i in range( n):
-		#[ nomeVoo, codigo]
 		listaVoo.append( ['Voo '+str( i * ( 3**3) + 10), (i+10)**2])
 	return listaVoo
 
-
-# ver esse link	https://stackoverflow.com/questions/46749491/kivy-python-scroll-view-in-a-layout
 class TelaParadasVoo( Screen):
 	scrollP = ObjectProperty( None)
 	nomeVoo = StringProperty( '')
@@ -73,118 +69,127 @@ class TelaParadasVoo( Screen):
 	def __init__( self, voo, **kwargs):
 		super( TelaParadasVoo, self).__init__( **kwargs)
 		self.voo = voo
-		#print( voo)
 		self.nomeVoo = voo[0]
 		Clock.schedule_once(self.criarscrollview)
 
 	def criarscrollview( self, dt):
-		listaParadas = getListaParadas( self.voo[1], 60)
-		#print ( self.voo)
-		#print ( listaParadas)
+		listaParadas = getListaParadas( self.voo[1], random.randint( 30, 1000))
 		lista = GridLayout( cols=1, padding=10, spacing=5, size_hint_y = None, width=400)
-		
 		lista.bind( minimum_height=lista.setter('height'))
-		
 		for i in range( len(listaParadas)):
 			sParadas = listaParadastoStr( listaParadas[i])
-			#como \t não funciona no kivy, colocamos 4 espaços para simbolizar o tab
-			stringParada = sParadas[0] + '    ' + sParadas[1] + '    ' + sParadas[2]
-			lbStr = Label( text = stringParada, font_size = 15, size=( Window.width* 0.9, 40), size_hint=(1, None))
+			stringParada = sParadas[0] + '\t' + sParadas[1] + '\t' + sParadas[2]
+			lbStr = LabelListaParadas( text = stringParada)
 			lista.add_widget( lbStr)
-
 		scrollP = ScrollView( size_hint=(1, None),size=(Window.width * 0.9, Window.height * 0.8), pos_hint={'center_x': .5, 'center_y': .4}, do_scroll_x=False)
 		scrollP.add_widget( lista)
-		
 		self.add_widget( scrollP)
 
+class LabelListaParadas( Button):
+	def __init__( self, **kwargs):
+		super( LabelListaParadas, self).__init__( **kwargs)
+		self.font_size = 15
+		self.size=( Window.width* 0.9, 40)
+		self.size_hint=(1, None)
+		self.text = self.text.replace('\t', '    ')
 
 class TelaSelectVoo( Screen):
 	scrollV = ObjectProperty( None)
-
 	def __init__( self, **kwargs):
 		super( TelaSelectVoo, self).__init__( **kwargs)
 		Clock.schedule_once(self.criarscrollview)
 
 	def criarscrollview( self, dt):
-		listaVoo = getListaVoo( 15)
-		#print (listaVoo)
-
+		listaVoo = getListaVoo( random.randint( 10, 100))
 		lista = GridLayout(cols=1, padding=10, spacing=10, size_hint_y = None, width=400)
-
 		lista.bind(minimum_height=lista.setter('height'))
-
 		for i in range( len(listaVoo)):
-			#btn = Button( text=listaVoo[i][0], size=(480, 40), size_hint=(1, None))
-			#btn.bind( on_press = self.parent.irTelaParadaVoo( listaVoo[i][1]))
-			btn = BotaoListaVoo( text=listaVoo[i][0], size=(480, 40), size_hint=(1, None))
+			btn = BotaoListaVoo( )
 			btn.criaBotaoLVoo( listaVoo[i])
 			lista.add_widget(btn)
-
 		scrollV = ScrollView( size_hint=(1, None), size=(Window.width * 0.9, Window.height * 0.8), pos_hint={'center_x': .5, 'center_y': .4}, do_scroll_x=False)
 		scrollV.add_widget( lista)
-
 		self.add_widget(scrollV)
 
 class BotaoListaVoo( Button):
 	def __init__( self, **kwargs):
 		super( BotaoListaVoo, self).__init__( **kwargs)
-		#self.criaBotaoLVoo( voo):
+		self.size=(480, 40)
+		self.size_hint=(1, None)
+		self.background_color = [ 0.5, 0.5 , 0.5, 3]
 
 	def criaBotaoLVoo( self, voo):
-		#print( voo)
+		self.text = voo[0]
 		self.voo = voo
 
-
 class TelaInicial( Screen):
+	pass
+
+class TelaCarregando(Screen):
+	pass
+
+class TelaMapa( Screen):
 	pass
 
 class Manager( ScreenManager):
 	def __init__(self, **kwargs):
 		super(Manager, self).__init__(**kwargs)
-		self.listaTela = [ TelaInicial()]
+		self.listaTela = [ TelaInicial(), TelaCarregando()]
 		self.add_widget( self.listaTela[0])
+		self.add_widget( self.listaTela[1])
 
 	def irTelaSelecVoo( self):
-		nomeTelaSelecVoo = 'telaselecvoo'
 		self.listaTela.append( TelaSelectVoo( name = nomeTelaSelecVoo))
-		self.add_widget( self.listaTela[1])
+		self.add_widget( self.listaTela[ 2])
 		self.current = nomeTelaSelecVoo
 
 	def voltarTelaInic( self):
-		self.current = 'telainic'
-		self.remove_widget( self.listaTela[1])
-		del self.listaTela[1]
+		self.current = nomeTelaInicial
+		self.remove_widget( self.listaTela[2])
+		del self.listaTela[2]
 
 	def  recarregaTelaSelecVoo( self):
-		self.current = 'telainic'
-		self.remove_widget( self.listaTela[1])
-		del self.listaTela[1]
+		self.current = nomeTelaCarregando
+		self.remove_widget( self.listaTela[2])
+		del self.listaTela[2]
 		self.irTelaSelecVoo()
 
 	def irTelaParadaVoo( self, voo):
-		nomeTelaParadaVoo = 'telaparada'
-		self.current = 'telainic'
-		self.remove_widget( self.listaTela[1])
-		del self.listaTela[1]
-		print( voo)
+		self.current = nomeTelaCarregando
+		self.remove_widget( self.listaTela[2])
+		del self.listaTela[2]
 		self.listaTela.append( TelaParadasVoo( voo, name = nomeTelaParadaVoo))
-		self.add_widget( self.listaTela[1])
+		self.add_widget( self.listaTela[2])
 		self.current = nomeTelaParadaVoo
 	
 	def sairTelaParadaVoo( self):
-		nomeTelaSelecVoo = 'telaselecvoo'
-		self.remove_widget( self.listaTela[1])
-		del self.listaTela[1]
+		self.current = nomeTelaCarregando
+		self.remove_widget( self.listaTela[2])
+		del self.listaTela[2]
 		self.irTelaSelecVoo()
-		
 
+	def irTelaMapa( self):
+		self.current = nomeTelaCarregando
+		self.listaTela.append( TelaMapa( name = nomeTelaMapa))
+		self.add_widget( self.listaTela[3])
+		self.current = nomeTelaMapa
 
-#interface = Builder.load_file( "main.kv")
+	def sairTelaMapa( self):
+		self.current = nomeTelaParadaVoo
+		self.remove_widget( self.listaTela[3])
+		del self.listaTela[3]
 
-class interfaceV2App( App):
+class InterfaceV2App( App):
+	"""InterfaceV2App"""
 	def build( self):
 		pass
 
+"""Definindo os nomes das telas"""
+nomeTelaMapa = 'telamap'
+nomeTelaSelecVoo = 'telaselecvoo'
+nomeTelaParadaVoo = 'telaparada'
+nomeTelaInicial = 'telainic'
+nomeTelaCarregando = 'telaloading'
 
 if __name__ == '__main__':
-	interfaceV2App().run()
+	InterfaceV2App().run()

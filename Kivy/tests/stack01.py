@@ -24,7 +24,7 @@ Builder.load_string("""
             BorderImage:
                 # BorderImage behaves like the CSS BorderImage
                 border: 10, 10, 10, 10
-                source: '/Users/clayhigh/Desktop/kivy/aot.png'
+                source: 'Woodalle Shield.png'
                 pos: self.pos
                 size: self.size
         Button:
@@ -96,7 +96,8 @@ Builder.load_string("""
         Button:
             text: 'Quit'
             background_color: 1,0,0,0.5
-            on_press: App.on_stop
+            #on_press: App.on_stop
+            on_press: app.stop()
 
 <SettingsScreen>:
     GridLayout:
@@ -107,7 +108,7 @@ Builder.load_string("""
             BorderImage:
                 # BorderImage behaves like the CSS BorderImage
                 border: 10, 10, 10, 10
-                source: '/Users/clayhigh/Desktop/kivy/ato.jpeg'
+                source: 'Germus Shield.png'
                 pos: self.pos
                 size: self.size
         Button:
