@@ -1,0 +1,3 @@
+title=Trabalho PAP
+author=Adriano Zanella Junior, João Batist, Cl
+orientation=portrait
