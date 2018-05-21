@@ -18,25 +18,16 @@ from kivy.uix.boxlayout import BoxLayout
 
 # selecionando um voo, pegar a lista de todas as paradas do voo
 # aqui se conecta com o servidor e pega os dados
-def getListaParadas( voo, n):
+def getListaParadas( voo):
 	"""Busca do servidor a lista de paradas de um voo, retornando uma lista com os dados das paradas"""
-	"""
-	listaParadas = []
-	peso = 50
-	for i in range(1,n):
-		rlat = round( random.randint( -90, 90) + random.random(), 4)
-		rlong = round( random.randint( -180, 180) + random.random(), 4)
-		rMovCarga = random.randint( -50, 50)
-		if peso + rMovCarga < 0:
-			rMovCarga = 15
-		peso += rMovCarga
-		listaParadas.append( [rlat, rlong, rMovCarga, peso])
-	"""
 	HOST, PORT = "localhost", 9999
 	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	destino = (HOST, PORT)
 	client.connect( destino)
-
+	client.send( bytes( 'lp', 'utf8'))
+	client.recv(1024).decode('utf8')
+	client.send( bytes( voo, 'utf8'))
+	print( voo)
 	listaParadas = []
 	while True:
 		msg = client.recv(1024).decode("utf8")
@@ -44,6 +35,7 @@ def getListaParadas( voo, n):
 		listaParadas.append( msg.split())
 		#print( msg)
 	client.close()
+	print( listaParadas)
 	return listaParadas
 
 def listaParadastoStr( parada):
@@ -70,24 +62,34 @@ def listaParadastoStr( parada):
 	return [ sCord, sCargaMov, sCargaFinal]
 	
 # aqui se conecta com o servidor e pega os dados
-def getListaVoo( n):
-	listaVoo = []
-	for i in range( n):
-		listaVoo.append( ['Voo '+str( i * ( 3**3) + 10), (i+10)**2])
+def getListaVoo():
+	listaVoo = []	
+	HOST, PORT = "localhost", 9999
+	destino = (HOST, PORT)
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	client.connect( destino)
+	client.send( bytes( 'lv', 'utf8'))
+	while True:
+		msg = client.recv(1024).decode("utf8")
+		if not msg: break
+		listaVoo.append( msg.split('--'))
+	client.close()
 	return listaVoo
 
 class TelaParadasVoo( Screen):
 	scrollP = ObjectProperty( None)
 	nomeVoo = StringProperty( '')
+	modeloAviao = StringProperty( '')
 
 	def __init__( self, voo, **kwargs):
 		super( TelaParadasVoo, self).__init__( **kwargs)
 		self.voo = voo
-		self.nomeVoo = voo[0]
+		self.nomeVoo = voo[1]
+		self.modeloAviao =voo[3]
 		Clock.schedule_once(self.criarscrollview)
 
 	def criarscrollview( self, dt):
-		listaParadas = getListaParadas( self.voo[1], random.randint( 30, 1000))
+		listaParadas = getListaParadas( self.voo[0])
 
 		lista = GridLayout( cols=1, padding=10, spacing=5, size_hint_y = None, width=400)
 		lista.bind( minimum_height=lista.setter('height'))
@@ -116,7 +118,7 @@ class TelaSelectVoo( Screen):
 		Clock.schedule_once(self.criarscrollview)
 
 	def criarscrollview( self, dt):
-		listaVoo = getListaVoo( random.randint( 10, 100))
+		listaVoo = getListaVoo()
 		lista = GridLayout(cols=1, padding=10, spacing=10, size_hint_y = None, width=400)
 		lista.bind(minimum_height=lista.setter('height'))
 		for i in range( len(listaVoo)):
@@ -135,7 +137,7 @@ class BotaoListaVoo( Button):
 		self.background_color = [ 0.5, 0.5 , 0.5, 3]
 
 	def criaBotaoLVoo( self, voo):
-		self.text = voo[0]
+		self.text = voo[1]
 		self.voo = voo
 
 class TelaInicial( Screen):
@@ -155,6 +157,7 @@ class Manager( ScreenManager):
 		self.add_widget( self.listaTela[1])
 
 	def irTelaSelecVoo( self):
+		self.current = nomeTelaCarregando
 		self.listaTela.append( TelaSelectVoo( name = nomeTelaSelecVoo))
 		self.add_widget( self.listaTela[ 2])
 		self.current = nomeTelaSelecVoo

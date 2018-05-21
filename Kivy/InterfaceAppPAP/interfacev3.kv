@@ -82,9 +82,13 @@ Manager:
 			Label:
 				size_hint_x: .4
 
-		Label:
+		BoxLayout:
+			orientation: 'horizontal'
 			size_hint_y: .1
-			text: root.nomeVoo
+			Label:
+				text: root.nomeVoo
+			Label:
+				text: root.modeloAviao
 
 		ScrollView:
 			id: scrollP
