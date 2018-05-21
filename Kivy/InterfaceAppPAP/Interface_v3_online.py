@@ -27,7 +27,7 @@ def getListaParadas( voo):
 	client.send( bytes( 'lp', 'utf8'))
 	client.recv(1024).decode('utf8')
 	client.send( bytes( voo, 'utf8'))
-	print( voo)
+	#print( voo)
 	listaParadas = []
 	while True:
 		msg = client.recv(1024).decode("utf8")
@@ -35,7 +35,7 @@ def getListaParadas( voo):
 		listaParadas.append( msg.split())
 		#print( msg)
 	client.close()
-	print( listaParadas)
+	#print( listaParadas)
 	return listaParadas
 
 def listaParadastoStr( parada):

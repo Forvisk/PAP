@@ -19,10 +19,10 @@ while True:
 		for i in arq.readlines():
 			k += 1
 			if k >= len( listaVoo):
-				print( i)
+				#print( i)
 				listaVoo.append( i.split('--'))
 			conect.sendto( bytes( i, "utf8"), cli)
-			arq.close()
+		arq.close()
 		#print(listaVoo)
 	elif pedido == 'lp':
 		conect.sendto( bytes( 'k', "utf8"), cli)
@@ -34,7 +34,7 @@ while True:
 			for i in arq.readlines():
 				#print( i)
 				conect.sendto( bytes( i, "utf8"), cli)
-				arq.close()
+			arq.close()
 	conect.close()
 
 serv.close()
