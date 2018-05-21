@@ -12,7 +12,7 @@ while True:
 	conect, cli = serv.accept()
 	print('Conectado por:', cli)
 	pedido = conect.recv(1024).decode("utf8")
-
+	#lista de voo
 	if pedido == 'lv':
 		arq = open('arquivos/listaVoo.txt', 'r')
 		k = 0
@@ -24,6 +24,8 @@ while True:
 			conect.sendto( bytes( i, "utf8"), cli)
 		arq.close()
 		#print(listaVoo)
+
+	#lista de paradas de um voo
 	elif pedido == 'lp':
 		conect.sendto( bytes( 'k', "utf8"), cli)
 		sIndice = conect.recv(1024).decode("utf8")
