@@ -4,6 +4,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 import random
+import socket
 
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
@@ -19,6 +20,7 @@ from kivy.uix.boxlayout import BoxLayout
 # aqui se conecta com o servidor e pega os dados
 def getListaParadas( voo, n):
 	"""Busca do servidor a lista de paradas de um voo, retornando uma lista com os dados das paradas"""
+	"""
 	listaParadas = []
 	peso = 50
 	for i in range(1,n):
@@ -29,27 +31,41 @@ def getListaParadas( voo, n):
 			rMovCarga = 15
 		peso += rMovCarga
 		listaParadas.append( [rlat, rlong, rMovCarga, peso])
+	"""
+	HOST, PORT = "localhost", 9999
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	destino = (HOST, PORT)
+	client.connect( destino)
 
+	listaParadas = []
+	while True:
+		msg = client.recv(1024).decode("utf8")
+		if not msg: break
+		listaParadas.append( msg.split())
+		#print( msg)
+	client.close()
 	return listaParadas
 
 def listaParadastoStr( parada):
-	
-	if( parada[0] < 0):
-		sLat = str( parada[0] * -1) + '° S'
+	iLat = int( parada[0])
+	iLong = int( parada[1])
+	iCargaMov = int( parada[2])
+	if( iLat < 0):
+		sLat = str( iLat * -1) + '° S'
 	else:
-		sLat = str( parada[0]) + '° N'
-	if( parada[1] < 0):
-		sLong = str( parada[1] * -1) + '° W'
+		sLat = str( iLat) + '° N'
+	if( iLong < 0):
+		sLong = str( iLong * -1) + '° W'
 	else:
-		sLong = str( parada[1]) + '° E'
+		sLong = str( iLong) + '° E'
 	sCord = sLat + ' -- ' + sLong
-	if( parada[2] < 0):
-		sCargaMov = 'Descarrega ' + str( parada[2] * -1) + 'kg'
-	elif( parada[2] == 0):
+	if( iCargaMov < 0):
+		sCargaMov = 'Descarrega ' + str( iCargaMov * -1) + 'kg'
+	elif( iCargaMov == 0):
 		sCargaMov = 'Sem movimento'
 	else:
-		sCargaMov = 'Carrega ' + str( parada[2]) + 'kg'
-	sCargaFinal = str( parada[3]) + 'kg'
+		sCargaMov = 'Carrega ' + str( iCargaMov) + 'kg'
+	sCargaFinal = parada[3] + 'kg'
 
 	return [ sCord, sCargaMov, sCargaFinal]
 	
@@ -72,6 +88,7 @@ class TelaParadasVoo( Screen):
 
 	def criarscrollview( self, dt):
 		listaParadas = getListaParadas( self.voo[1], random.randint( 30, 1000))
+
 		lista = GridLayout( cols=1, padding=10, spacing=5, size_hint_y = None, width=400)
 		lista.bind( minimum_height=lista.setter('height'))
 		for i in range( len(listaParadas)):
@@ -79,6 +96,7 @@ class TelaParadasVoo( Screen):
 			stringParada = sParadas[0] + '\t' + sParadas[1] + '\t' + sParadas[2]
 			lbStr = LabelListaParadas( text = stringParada)
 			lista.add_widget( lbStr)
+
 		scrollP = ScrollView( size_hint=(1, None),size=(Window.width * 0.9, Window.height * 0.8), pos_hint={'center_x': .5, 'center_y': .4}, do_scroll_x=False)
 		scrollP.add_widget( lista)
 		self.add_widget( scrollP)
