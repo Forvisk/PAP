@@ -16,3 +16,5 @@ remove (j:i:atail) x | j == x = i:atail
  | i == x = j:atail
  | length atail == 1 && atail == [x] = [i,j]
  | otherwise = [i,j] ++ (remove atail x)
+
+-- pior caso -- com n inteiros, os n-1 primeiros elementos em ordem crescente, e no n-esimo elemento, o menor numero de todos
