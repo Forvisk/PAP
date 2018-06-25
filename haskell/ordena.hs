@@ -6,7 +6,7 @@
 ordena :: [Int] -> [Int]
 ordena [] = []
 ordena [i] = [i]
-ordena [i,j] | i > j =[j, i]
+ordena [i,j] | i > j = [j, i]
  | otherwise = [i, j]
 ordena l = ordena ( remove l (maximum l)) ++ [maximum l]
 
